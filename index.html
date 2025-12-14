@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pro Scientific Calculator</title>
+  <style>
+    /* 基本布局 */
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #1c1c1c;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    .calculator {
+      background: #2e2e2e;
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 5px 30px rgba(0,0,0,0.5);
+      width: 360px;
+      max-width: 95%;
+    }
+
+    #display {
+      width: 100%;
+      height: 60px;
+      font-size: 28px;
+      margin-bottom: 15px;
+      text-align: right;
+      padding: 10px;
+      border-radius: 10px;
+      border: none;
+      background: #f0f0f0;
+      box-sizing: border-box;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+    }
+
+    .buttons button {
+      padding: 15px;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      color: white;
+      transition: all 0.1s ease;
+      box-shadow: 0 3px #111;
+    }
+
+    /* 按钮颜色分类 */
+    .buttons button.number { background: #4d4d4d; }
+    .buttons button.number:hover { background: #666; }
+
+    .buttons button.operator { background: #ff9500; }
+    .buttons button.operator:hover { background: #ffa733; }
+
+    .buttons button.clear { background: #e53935; }
+    .buttons button.clear:hover { background: #f55a4e; }
+
+    .buttons button.function { background: #555; }
+    .buttons button.function:hover { background: #777; }
+
+    /* 按钮按下效果 */
+    .buttons button:active {
+      transform: translateY(2px);
+      box-shadow: 0 1px #111;
+    }
+
+    /* 响应式 */
+    @media (max-width: 400px) {
+      #display { font-size: 24px; height: 50px; }
+      .buttons button { font-size: 16px; padding: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <input type="text" id="display" disabled>
+    <div class="buttons">
+      <button class="clear" onclick="clearDisplay()">C</button>
+      <button class="function" onclick="appendNumber('(')">(</button>
+      <button class="function" onclick="appendNumber(')')">)</button>
+      <button class="operator" onclick="appendNumber('/')">÷</button>
+      <button class="operator" onclick="appendNumber('*')">×</button>
+      <button class="operator" onclick="appendNumber('-')">−</button>
+
+      <button class="number" onclick="appendNumber('7')">7</button>
+      <button class="number" onclick="appendNumber('8')">8</button>
+      <button class="number" onclick="appendNumber('9')">9</button>
+      <button class="operator" onclick="appendNumber('+')">+</button>
+      <button class="function" onclick="appendFunction('sin')">sin</button>
+      <button class="function" onclick="appendFunction('cos')">cos</button>
+
+      <button class="number" onclick="appendNumber('4')">4</button>
+      <button class="number" onclick="appendNumber('5')">5</button>
+      <button class="number" onclick="appendNumber('6')">6</button>
+      <button class="function" onclick="appendFunction('tan')">tan</button>
+      <button class="function" onclick="appendFunction('log')">log</button>
+      <button class="function" onclick="appendFunction('ln')">ln</button>
+
+      <button class="number" onclick="appendNumber('1')">1</button>
+      <button class="number" onclick="appendNumber('2')">2</button>
+      <button class="number" onclick="appendNumber('3')">3</button>
+      <button class="function" onclick="appendFunction('sqrt')">√</button>
+      <button class="function" onclick="appendFunction('x2')">x²</button>
+      <button class="function" onclick="appendFunction('%')">%</button>
+
+      <button class="number" onclick="appendNumber('0')">0</button>
+      <button class="number" onclick="appendNumber('.')">.</button>
+      <button class="function" onclick="appendConstant('π')">π</button>
+      <button class="function" onclick="appendConstant('e')">e</button>
+      <button class="operator" onclick="calculate()">=</button>
+    </div>
+  </div>
+
+  <script>
+    const display = document.getElementById('display');
+
+    function appendNumber(num) {
+      display.value += num;
+    }
+
+    function appendFunction(func) {
+      if(func === 'x2') display.value += '**2';
+      else if(func === 'sqrt') display.value += 'Math.sqrt(';
+      else if(func === 'sin') display.value += 'Math.sin(';
+      else if(func === 'cos') display.value += 'Math.cos(';
+      else if(func === 'tan') display.value += 'Math.tan(';
+      else if(func === 'log') display.value += 'Math.log10(';
+      else if(func === 'ln') display.value += 'Math.log(';
+      else if(func === '%') display.value += '/100';
+    }
+
+    function appendConstant(constant) {
+      if(constant === 'π') display.value += Math.PI;
+      else if(constant === 'e') display.value += Math.E;
+    }
+
+    function clearDisplay() {
+      display.value = '';
+    }
+
+    function calculate() {
+      try {
+        display.value = Function('"use strict";return (' + display.value + ')')();
+      } catch {
+        display.value = 'Error';
+      }
+    }
+  </script>
+</body>
+</html>
